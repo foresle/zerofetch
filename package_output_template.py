@@ -5,5 +5,5 @@ class PackageTemplate:
     def __init__(self) -> None:
         pass
 
-    def __run__(self) -> list:
+    def __list__(self) -> list:
         return self.output_text
