@@ -14,5 +14,8 @@ class SessionInfo(PackageTemplate):
             self.output_text.append(f'{str_uptime[0]} Hours {str_uptime[1]} Minutes {float(str_uptime[2]).__ceil__()} seconds')
 
 
+# Debug
 if __name__ == '__main__':
-    pass
+    session_info: SessionInfo = SessionInfo()
+    session_info.get_uptime()
+    print(session_info.output_text)
