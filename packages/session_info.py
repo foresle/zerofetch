@@ -14,4 +14,5 @@ class SessionInfo(PackageTemplate):
 
 
 if __name__ == '__main__':
-    print("Hi")
+    session_info: SessionInfo = SessionInfo()
+    session_info.get_uptime()
