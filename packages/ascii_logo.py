@@ -6,6 +6,24 @@ from PIL import Image
 class AsciiLogo(PackageTemplate):
     def __init__(self):
         super().__init__()
+        self.output_text.clear()
+        self.generate_from_ascii_txt('./packages/ascii_image.txt')
+        # self.generate_ascii_from_image('./packages/600px-NewTux.svg.png')
+
+    def generate_from_ascii_txt(self, text_path: str) -> None:
+        biggest_line: int = 0
+        with open(text_path, 'r') as file:
+            for line in file.read().split('\n'):
+                self.output_text.append(line)
+                if biggest_line < len(line):
+                    biggest_line = len(line)
+
+            for line_index in range(0, len(self.output_text)):
+                self.output_text[line_index] = self.output_text[line_index] + ' '*(biggest_line-len(self.output_text[line_index]))
+
+
+
+
 
     def generate_ascii_from_image(self, image_path: str) -> None:
         img = Image.open(image_path)
@@ -37,8 +55,9 @@ class AsciiLogo(PackageTemplate):
 
         pixel_literals_count = len(pixel_literals)
         ascii_image = []
-        for pixel_literal_string_start in range(0, pixel_literals_count, new_width*16-1):
-            ascii_image.append(pixel_literals[pixel_literal_string_start:pixel_literal_string_start + new_width*16-1])
+        for pixel_literal_string_start in range(0, pixel_literals_count, new_width * 16 - 1):
+            ascii_image.append(
+                pixel_literals[pixel_literal_string_start:pixel_literal_string_start + new_width * 16 - 1])
 
         self.output_text = ascii_image
         ascii_image = '\n'.join(ascii_image)

@@ -6,6 +6,12 @@ import os
 class SessionInfo(PackageTemplate):
     def __init__(self):
         super().__init__()
+        self.output_text.clear()
+        self.get_uptime()
+        self.get_user()
+        self.get_shell()
+        self.get_session_type()
+        self.get_desktop_environment()
 
     def get_user(self):
         user_name = str.rstrip(os.popen("echo $USER").read())
