@@ -7,7 +7,7 @@ class AsciiLogo(PackageTemplate):
     def __init__(self):
         super().__init__()
         self.output_text.clear()
-        self.generate_from_ascii_txt('./packages/ascii_image.txt')
+        self.generate_from_ascii_txt('./packages/amogus.ascii')
         # self.generate_ascii_from_image('./packages/600px-NewTux.svg.png')
 
     def generate_from_ascii_txt(self, text_path: str) -> None:
