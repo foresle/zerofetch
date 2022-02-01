@@ -14,8 +14,9 @@ def kB_to_Mb(value: float) -> float:
 class MemoryInfo(PackageTemplate):
     def __init__(self):
         super().__init__()
-        # self.get_ram()
-        # self.get_swap()
+        self.output_text.clear()
+        self.get_ram()
+        self.get_swap()
 
     def get_ram(self):
         ram_total: float
