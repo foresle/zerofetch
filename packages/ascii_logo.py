@@ -1,6 +1,52 @@
+import random
+
 import xtermcolor
 from package_output_template import PackageTemplate
 from PIL import Image
+
+ascii_images: list = [
+    '''.==============================================.
+|                                              |
+|                           .'\                |
+|                          //  ;               |
+|                         /'   |               |
+|        .----..._    _../ |   \               |
+|         \\'---._ `.-'      `  .'              |
+|          `.    '              `.             |
+|            :            _,.    '.            |
+|            |     ,_    (() '    |            |
+|            ;   .'(().  '      _/__..-        |
+|            \ _ '       __  _.-'--._          |
+|            ,'.'...____'::-'  \     `'        |
+|           / |   /         .---.              |
+|     .-.  '  '  / ,---.   (     )             |
+|    / /       ,' (     )---`-`-`-.._          |
+|   : '       /  '-`-`-`..........--'\         |
+|   ' :      /  /                     '.       |
+|   :  \    |  .'         o             \      |
+|    \  '  .' /          o       .       '     |
+|     \  `.|  :      ,    : _o--'.\      |     |
+|      `. /  '       ))    (   )  \>     |     |
+|        ;   |      ((      \ /    \___  |     |
+|        ;   |      _))      `'.-'. ,-'` '     |
+|        |    `.   ((`            |/    /      |
+|        \     ).  .))            '    .       |
+|     ----`-'-'  `''.::.________:::mx'' ---    |
+|                                              |
+|                                              |
+|                                              |
+'=============================================='
+    ''', ]
+
+
+# class AsciiLogoError(Exception):
+#     text: str
+#
+#     def __init__(self, text: str):
+#         self.text = text
+#
+#     def __str__(self):
+#         return self.text
 
 
 class AsciiLogo(PackageTemplate):
@@ -12,18 +58,22 @@ class AsciiLogo(PackageTemplate):
 
     def generate_from_ascii_txt(self, text_path: str) -> None:
         biggest_line: int = 0
-        with open(text_path, 'r') as file:
-            for line in file.read().split('\n'):
+        try:
+            with open(text_path, 'r') as file:
+                for line in file.read().split('\n'):
+                    self.output_text.append(line)
+                    if biggest_line < len(line):
+                        biggest_line = len(line)
+
+        except FileNotFoundError:
+            for line in random.choice(ascii_images).split('\n'):
                 self.output_text.append(line)
                 if biggest_line < len(line):
                     biggest_line = len(line)
 
-            for line_index in range(0, len(self.output_text)):
-                self.output_text[line_index] = self.output_text[line_index] + ' '*(biggest_line-len(self.output_text[line_index]))
-
-
-
-
+        for line_index in range(0, len(self.output_text)):
+            self.output_text[line_index] = self.output_text[line_index] + ' ' * (
+                    biggest_line - len(self.output_text[line_index]))
 
     def generate_ascii_from_image(self, image_path: str) -> None:
         img = Image.open(image_path)
