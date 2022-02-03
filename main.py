@@ -1,11 +1,13 @@
 from packages import *
 import os
+import argparse
+import yaml
 
 
-def run():
+def run(config: dict):
     # Getting all data from packages
-    left_col: list = AsciiLogo().__list__().copy()
-    right_col: list = [' ' for i in range(2)] + SessionInfo().__list__().copy() + MemoryInfo().__list__().copy()
+    left_col: list = AsciiLogo(ascii_file=config.get('ascii_file', '')).__list__().copy()
+    right_col: list = [' ' for i in range(2)] + ['Hello friend', ' '] + SessionInfo().__list__().copy() + MemoryInfo().__list__().copy()
 
     ts: os.terminal_size = os.get_terminal_size()
 
@@ -33,4 +35,20 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    # Args
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('-c', dest='conf_path', type=str, help='config file path')
+    args = argparser.parse_args()
+
+    if args.conf_path:
+        conf_path: str = args.conf_path
+    else:
+        conf_path: str = os.path.abspath(f'{os.path.expanduser("~")}/.zerofetch.conf')
+
+    # Load config if it exists
+    config: dict = {}
+    if os.path.exists(conf_path):
+        with open(conf_path, 'r') as conf_file:
+            config = yaml.safe_load(conf_file)
+
+    run(config)

@@ -36,7 +36,21 @@ ascii_images: list = [
 |                                              |
 |                                              |
 '=============================================='
-    ''', ]
+    ''', '''     
+      ____________
+     /\  ________ \\
+    /  \ \______/\ \\
+   / /\ \ \  / /\ \ \\
+  / / /\ \ \/ / /\ \ \\
+ / / /__\_\/ / /__\_\ \\
+/ /_/_______/ /________\\
+\ \ \______ \ \______  /
+ \ \ \  / /\ \ \  / / /
+  \ \ \/ / /\ \ \/ / /
+   \ \/ / /__\_\/ / /
+    \  / /______\/ /
+     \/___________/
+    ''']
 
 
 # class AsciiLogoError(Exception):
@@ -50,10 +64,10 @@ ascii_images: list = [
 
 
 class AsciiLogo(PackageTemplate):
-    def __init__(self):
+    def __init__(self, ascii_file: str = None):
         super().__init__()
         self.output_text.clear()
-        self.generate_from_ascii_txt('./packages/amogus.ascii')
+        self.generate_from_ascii_txt(ascii_file)
         # self.generate_ascii_from_image('./packages/600px-NewTux.svg.png')
 
     def generate_from_ascii_txt(self, text_path: str) -> None:
