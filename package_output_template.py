@@ -7,3 +7,4 @@ class PackageTemplate:
 
     def __list__(self) -> list:
         return self.output_text
+

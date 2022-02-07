@@ -6,8 +6,8 @@ import yaml
 
 def run(config: dict):
     # Getting all data from packages
-    left_col: list = AsciiLogo(ascii_file=config.get('ascii_file', '')).__list__().copy()
-    right_col: list = [' ' for i in range(2)] + ['Hello friend', ' '] + SessionInfo().__list__().copy() + MemoryInfo().__list__().copy()
+    left_col: list = AsciiLogo(text_file=config.get('ascii_logo_file', None)).__list__().copy()
+    right_col: list = [' '] + ['Hello friend', ' '] + SessionInfo().__list__().copy() + MemoryInfo().__list__().copy()
 
     ts: os.terminal_size = os.get_terminal_size()
 
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     if args.conf_path:
         conf_path: str = args.conf_path
     else:
-        conf_path: str = os.path.abspath(f'{os.path.expanduser("~")}/.zerofetch.conf')
+        conf_path: str = os.path.abspath(f'{os.path.expanduser("~")}/.zerofetch_conf.yaml')
 
     # Load config if it exists
     config: dict = {}
