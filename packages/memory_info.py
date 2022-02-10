@@ -2,12 +2,12 @@ from package_output_template import PackageTemplate
 import re
 
 
-# Converter functions
-def kB_to_Gb(value: float) -> float:
+# Converter kb functions
+def convert_to_gb(value: float) -> float:
     return round(value / 1024 / 1024, 1)
 
 
-def kB_to_Mb(value: float) -> float:
+def convert_to_mb(value: float) -> float:
     return round(value / 1024, 1)
 
 
@@ -19,46 +19,45 @@ class MemoryInfo(PackageTemplate):
         self.get_swap()
 
     def get_ram(self):
-        ram_total: float
-        ram_available: float
-        ram_used: float
+        ram_total: int
+        ram_free: int
+        ram_used: int
+        ram_buffer: int
+        ram_cache: int
 
         with open("/proc/meminfo", "r") as memory_file:
             for line in memory_file:
-                if 'MemTotal:' in line:
-                    ram_total = float(re.search('\d+', line)[0])
+                if re.match('^Cached:.{1,}[0-9]{1,}.kB$', line):
+                    ram_cache = int(re.search('\d+', line)[0])
 
-                if 'MemAvailable:' in line:
-                    ram_available = float(re.search('\d+', line)[0])
+                if re.match('^MemTotal:.{1,}[0-9]{1,}.kB$', line):
+                    ram_total = int(re.search('\d+', line)[0])
 
-        ram_used = ram_total - ram_available
+                if re.match('^MemFree:.{1,}[0-9]{1,}.kB$', line):
+                    ram_free = int(re.search('\d+', line)[0])
 
-        self.output_text.append(
-            f'''Memory used: {str(kB_to_Gb(ram_used)) + 'Gb' if kB_to_Gb(ram_used) > 1 else str(kB_to_Mb(ram_used)) + 'Mb'}''' 
-            f''' of {str(kB_to_Gb(ram_total)) + "Gb" if kB_to_Gb(ram_total) > 1 else str(kB_to_Mb(ram_total)) + "Mb"}''')
+                if re.match('^Buffers:.{1,}[0-9]{1,}.kB$', line):
+                    ram_buffer = int(re.search('\d+', line)[0])
+
+        ram_used = ram_total - ram_free - ram_cache - ram_buffer
+        self.output_text.append(f'Memory used: {convert_to_gb(ram_used)}Gb of {convert_to_gb(ram_total)}Gb')
 
     def get_swap(self):
-        swap_total: float
-        swap_free: float
+        swap_total: int
+        swap_free: int
 
         with open("/proc/meminfo", "r") as memory_file:
             for line in memory_file:
-                if 'SwapTotal:' in line:
+                if re.match('^SwapTotal:.{1,}[0-9]{1,}.kB$', line):
                     swap_total = float(re.search("\d+", line)[0])
 
-                if 'SwapFree:' in line:
+                if re.match('^SwapFree:.{1,}[0-9]{1,}.kB$', line):
                     swap_free = float(re.search("\d+", line)[0])
 
-        # covert kB to Gb
-        swap_total = round(swap_total / 1024, 2)
-        swap_free = round(swap_free / 1024, 2)
-
-        self.output_text.append(f'Swap used: {swap_total - swap_free} of {swap_total} Mb')
+        self.output_text.append(f'Swap used: {convert_to_gb(swap_total - swap_free)} of {convert_to_gb(swap_total)} Gb')
 
 
 # Debug
 if __name__ == '__main__':
     memory_info: MemoryInfo = MemoryInfo()
-    memory_info.get_ram()
-    memory_info.get_swap()
     print(memory_info.output_text)
